@@ -75,8 +75,11 @@ function importarReportesYRespaldar() {
     }
   }
 
-  // 📊 Ejecutar actualización de resumen y totales
-  actualizarResumen();
+  // ✅ Esperar a que los datos se escriban completamente
+SpreadsheetApp.flush();
+
+// 📊 Ejecutar resumen basado en la hoja Mayo25
+actualizarResumen();
 
   // ✅ Mensaje final
   ui.alert(`Importación completada.\nArchivos procesados: ${procesados}`);
