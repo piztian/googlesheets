@@ -1,73 +1,82 @@
 function importarReportesYRespaldar() {
-  // 🗂️ IDs de carpetas y hoja de destino
   const carpetaOrigenId = '1V0vXVF29Ixa62tKHKZ5UIXu9QXqJYkM9';
   const carpetaDestinoId = '1DRdduY7hStZNSPq3FmEGJmcYGqoFG_Ct';
-  const sheetId = '1GFXbZ4IwEVaekpk_guaYORFyz0O07JPsE-Hp1AyxUrk'; // NUEVA hoja
-  const hojaDestinoNombre = 'Mayo25';
+  const sheetId = '1GFXbZ4IwEVaekpk_guaYORFyz0O07JPsE-Hp1AyxUrk'; // Hoja de Google principal
 
   const carpetaOrigen = DriveApp.getFolderById(carpetaOrigenId);
   const carpetaDestino = DriveApp.getFolderById(carpetaDestinoId);
-  const hojaDestino = SpreadsheetApp.openById(sheetId).getSheetByName(hojaDestinoNombre);
+  const archivoDestino = SpreadsheetApp.openById(sheetId);
   const ui = SpreadsheetApp.getUi();
 
-  const archivosProcesables = [];
+  const archivos = carpetaOrigen.getFiles();
+  const archivosProcesados = [];
   const archivosNoProcesados = [];
 
-  const archivos = carpetaOrigen.getFiles();
-
-  // 🔎 Clasificar archivos
   while (archivos.hasNext()) {
     const archivo = archivos.next();
     const nombre = archivo.getName();
     const tipo = archivo.getMimeType();
 
-    // ✅ Solo procesar archivos Google Sheets que contengan "Reporte"
     if (tipo === MimeType.GOOGLE_SHEETS && nombre.includes("Reporte")) {
-      const match = nombre.match(/(\d{1,2})/); // Extrae número de día del nombre
-      const dia = match ? parseInt(match[1]) : 0;
-      archivosProcesables.push({ archivo, dia });
+      archivosProcesados.push(archivo);
     } else if (nombre.endsWith(".xlsx")) {
-      archivosNoProcesados.push(archivo); // Archivos Excel no se procesan
+      archivosNoProcesados.push(archivo);
     }
   }
 
-  // 📅 Ordenar archivos por número de día ascendente
-  archivosProcesables.sort((a, b) => a.dia - b.dia);
+  // Procesar cada archivo
+  for (const archivo of archivosProcesados) {
+    const libro = SpreadsheetApp.open(archivo);
+    const hojaOrigen = libro.getSheets()[0];
+    const datos = hojaOrigen.getDataRange().getValues();
 
-  let procesados = 0;
+    if (datos.length < 2) continue;
 
-  // 🔄 Procesar archivos uno por uno
-  for (const { archivo } of archivosProcesables) {
-    const archivoSpreadsheet = SpreadsheetApp.open(archivo);
-    const hojaOrigen = archivoSpreadsheet.getSheets()[0];
-    let datos = hojaOrigen.getDataRange().getValues();
+    const encabezado = datos[0];
 
-    if (datos.length > 1) {
-      datos = datos.slice(1); // ❌ Elimina encabezado
-      hojaDestino.getRange(hojaDestino.getLastRow() + 1, 1, datos.length, datos[0].length).setValues(datos);
-      procesados++;
+    // Recorrer filas (desde fila 1 porque fila 0 es encabezado)
+    for (let i = 1; i < datos.length; i++) {
+      const fila = datos[i];
+      const fecha = fila[3]; // Columna D
 
-      // 📁 Mover archivo procesado a carpeta de respaldo
-      carpetaDestino.addFile(archivo);
-      carpetaOrigen.removeFile(archivo);
+      if (!(fecha instanceof Date)) continue;
+
+      const mes = Utilities.formatDate(fecha, "GMT-6", "MMMM"); // ejemplo: "Enero"
+      const anio = Utilities.formatDate(fecha, "GMT-6", "yy");   // ejemplo: "25"
+      const nombreHoja = `${capitalize(mes)}${anio}`;
+
+      let hojaDestino = archivoDestino.getSheetByName(nombreHoja);
+
+      // Crear hoja si no existe
+      if (!hojaDestino) {
+        hojaDestino = archivoDestino.insertSheet(nombreHoja);
+        hojaDestino.appendRow(encabezado); // agregar encabezados
+      }
+
+      // Agregar fila de datos
+      hojaDestino.appendRow(fila);
     }
+
+    // Mover archivo procesado
+    carpetaDestino.addFile(archivo);
+    carpetaOrigen.removeFile(archivo);
   }
 
-  // ❓ Preguntar si deseas eliminar archivos .xlsx
+  // Preguntar si eliminar archivos .xlsx no procesados
   if (archivosNoProcesados.length > 0) {
     const respuesta = ui.alert(
-      `Se encontraron ${archivosNoProcesados.length} archivos .xlsx que no se procesaron.\n¿Deseas eliminarlos de la carpeta?`,
+      `Se encontraron ${archivosNoProcesados.length} archivos .xlsx que no se procesaron.\n¿Deseas eliminarlos?`,
       ui.ButtonSet.YES_NO
     );
-
     if (respuesta === ui.Button.YES) {
       archivosNoProcesados.forEach(f => f.setTrashed(true));
     }
   }
 
-  // 📊 Ejecutar actualización de resumen y totales
-  actualizarResumen();
+  ui.alert("Importación finalizada con éxito. Las filas se distribuyeron por pestaña según su mes.");
+}
 
-  // ✅ Mensaje final
-  ui.alert(`Importación completada.\nArchivos procesados: ${procesados}`);
+// Capitaliza primera letra
+function capitalize(texto) {
+  return texto.charAt(0).toUpperCase() + texto.slice(1).toLowerCase();
 }
