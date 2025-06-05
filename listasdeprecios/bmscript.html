@@ -1,0 +1,62 @@
+<script>
+let productosOriginales =[];
+
+fetch("https://script.google.com/macros/s/AKfycbz8jH9TS-Q8bDZP7hRwGHIpfFkDG1W6rlyFXZES7TFSU2xnLurg1AWY-_5b1SyX5x1cOQ/exec?hoja=Lista BM")
+  .then(res => res.json())
+  .then(data =>{productosOriginales = data;
+    renderizarProductos(productosOriginales);
+    cargarMarcasUnicas(productosOriginales);});
+
+function cargarMarcasUnicas(data){const select = document.getElementById("marcaFiltro");
+  const marcas =[...new Set(data.map(p => (p["NOMBRE CATEGORIA"]|| "").trim()))].filter(Boolean).sort();
+  marcas.forEach(marca =>{const option = document.createElement("option");
+    option.value = marca;
+    option.textContent = marca;
+    select.appendChild(option);});}function filtrarProductos(){const marca = document.getElementById("marcaFiltro").value.toLowerCase();
+  const precioMax = parseFloat(document.getElementById("precioFiltro").value);
+  const precioMin = parseFloat(document.getElementById("precioMin").value);
+  const textoBusqueda = document.getElementById("busquedaNombre").value.toLowerCase();
+
+  const filtrados = productosOriginales.filter(p =>{const nombre = (p["PRODUCTO"]|| "").toLowerCase();
+    const precio = parseFloat(p["PRECIO PUBLICO"]);
+    const marcaProd = (p["NOMBRE CATEGORIA"]|| "").trim().toLowerCase();
+    return (
+      (!marca || marcaProd === marca) &&
+      (!isNaN(precioMin) ? precio >= precioMin : true) &&
+      (!isNaN(precioMax) ? precio <= precioMax : true) &&
+      (!textoBusqueda || nombre.includes(textoBusqueda))
+    );});
+
+  renderizarProductos(filtrados);}function borrarFiltros(){document.getElementById("busquedaNombre").value = "";
+  document.getElementById("marcaFiltro").value = "";
+  document.getElementById("precioMin").value = "";
+  document.getElementById("precioFiltro").value = "";
+  renderizarProductos(productosOriginales);}function renderizarProductos(lista){const container = document.getElementById("productos");
+  container.innerHTML = "";
+
+  lista.forEach(producto =>{const tarjeta = document.createElement("div");
+    tarjeta.style.background = "white";
+    tarjeta.style.border = "1px solid #ddd";
+    tarjeta.style.borderRadius = "8px";
+    tarjeta.style.padding = "15px";
+    tarjeta.style.width = "260px";
+    tarjeta.style.boxShadow = "0 2px 5px rgba(0,0,0,0.1)";
+
+    const nombreOriginal = producto["PRODUCTO"]|| "";
+    const codigo = producto["CODIGO"]|| "";
+    const precio = parseFloat(producto["PRECIO PUBLICO"]);
+    const cantidad = producto["CANTIDAD"]|| "-";
+    const nombreBusqueda = encodeURIComponent(nombreOriginal.trim());
+    const enlaceFoto = `https://www.google.com/search?tbm=isch&q=${nombreBusqueda}`;
+
+    tarjeta.innerHTML = `
+      <h3 style="color: #333; font-size: 1.1em; margin-bottom: 5px;">${nombreOriginal}</h3>
+      <a href='${enlaceFoto}' target='_blank' style='font-size: 0.9em; color: #007bff;'>📸 Ver foto</a>
+      <p style="color: #666; font-size: 0.9em;">Marca: ${producto["NOMBRE CATEGORIA"]|| "-"}</p>
+      <p style="font-size: 1.2em; font-weight: bold; color: #28a745;">$${!isNaN(precio) ? precio.toFixed(2) : '-'}</p>
+      <p style="font-size: 0.9em; color: #555;">Cantidad disponible: <strong>${cantidad}</strong></p>
+      <p style="font-size: 0.85em; color: #555;">Código: <strong>${codigo}</strong></p>
+      <a href="https://wa.link/7rrk7n" target="_blank" style="display: inline-block; margin-top: 10px; padding: 8px 15px; background-color: #25d366; color: white; border-radius: 5px; text-decoration: none;">💬 Pedir</a>
+    `;
+
+    container.appendChild(tarjeta);});}</script>
