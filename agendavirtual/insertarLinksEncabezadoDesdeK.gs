@@ -6,7 +6,7 @@ function insertarLinksEncabezadoDesdeK() {
   const filaFechas = hojaVista.getRange("A1:E1").getValues()[0];
   const mesesAbreviados = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
 
-  for (let col = 1; col <= 4; col++) { // B–E
+  for (let col = 1; col <= 5; col++) { // B–F
     const fecha = filaFechas[col];
     if (!(fecha instanceof Date)) continue;
 
@@ -23,7 +23,7 @@ function insertarLinksEncabezadoDesdeK() {
     const texto = Utilities.formatDate(fecha, "America/Mexico_City", "d/M/yyyy");
     const formula = `=HYPERLINK("#gid=${gid}&range=${colLetra}1", "${texto}")`;
 
-    hojaVista.getRange(1, col + 1).setFormula(formula); // B1:E1
+    hojaVista.getRange(1, col + 1).setFormula(formula); // B1:F1
   }
 
   Logger.log("✅ Hipervínculos agregados desde columna K en adelante.");
