@@ -30,7 +30,7 @@ function estilizarVistaAgenda() {
   }
 
   // Ocultar columnas y filas innecesarias
-  hoja.getMaxColumns() > 5 && hoja.hideColumns(6, hoja.getMaxColumns() - 5);
+  hoja.getMaxColumns() > 6 && hoja.hideColumns(7, hoja.getMaxColumns() - 6);
   hoja.getMaxRows() > 49 && hoja.hideRows(50, hoja.getMaxRows() - 49);
 
   // Ocultar filas de media hora (filas impares entre la 5 y la 31)
