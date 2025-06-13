@@ -19,7 +19,8 @@ function cargarCitasHoyYProximosDias() {
     { letra: "K", num: 11 },
     { letra: "L", num: 12 },
     { letra: "M", num: 13 },
-    { letra: "N", num: 14 }
+    { letra: "N", num: 14 },
+    { letra: "O", num: 15 }
   ];
 
   let totalCargadas = 0;
