@@ -1,9 +1,9 @@
 function estilizarVistaAgenda() {
   const hoja = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("VistaAgenda");
-  const coloresColumnas = ["#fdecea", "#fff9c4", "#e8f5e9", "#e3f2fd"]; // B-E
+  const coloresColumnas = ["#fdecea", "#fff9c4", "#e8f5e9", "#e3f2fd","#f3e5f5"]; // B-F
 
   // Encabezado
-  hoja.getRange("A1:E1").setFontWeight("bold").setFontSize(14).setFontColor("white")
+  hoja.getRange("A1:F1").setFontWeight("bold").setFontSize(14).setFontColor("white")
     .setBackground("#1565c0").setHorizontalAlignment("center").setVerticalAlignment("middle")
     .setWrap(true).setBorder(true, true, true, true, true, true);
 
