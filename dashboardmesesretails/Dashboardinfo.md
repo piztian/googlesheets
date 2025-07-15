@@ -21,6 +21,7 @@ Este proyecto automatiza la creación, mantenimiento y visualización de dashboa
 | `evaluarRiesgoUltimos3MesesConTitulos.gs`                    | Evalúa el riesgo de cada sucursal basado en proyección vs promedio de los últimos 3 meses       | [🔧 Código](./evaluarRiesgoUltimos3MesesConTitulos.gs) · [📄 Doc](./evaluarRiesgoUltimos3MesesConTitulos.md) |
 | `generarDashboardsDesdePlantilla.gs`                         | Genera o actualiza dashboards por tienda, incluyendo layout, KPIs y gráficos                     | [🔧 Código](./generarDashboardsDesdePlantilla.gs) · [📄 Doc](./generarDashboardsDesdePlantilla.md) |
 | `generarLinksAHojasYOcultar.gs`                              | Genera una tabla con hipervínculos hacia cada hoja y oculta las no esenciales                   | [🔧 Código](./generarLinksAHojasYOcultar.gs) · [📄 Doc](./generarLinksAHojasYOcultar.md) |
+| `enviarDashboardsPDFdesdeCarpetaPrincipal.gs`                | Exporta cada hoja de sucursal como PDF, lo guarda en Drive y envía el link por correo           | [🔧 Código](./enviarDashboardsPDFdesdeCarpetaPrincipal.gs) · [📄 Doc](./enviarDashboardsPDFdesdeCarpetaPrincipal.md) |
 
 ---
 
@@ -33,7 +34,7 @@ Este proyecto automatiza la creación, mantenimiento y visualización de dashboa
 ## 🛠️ Requisitos de estructura en Google Sheets
 
 - **Dashboard**: hoja plantilla con KPIs, layout, gráficos y fórmulas
-- **Tiendas**: lista de sucursales en `A2:A`
+- **Tiendas**: lista de sucursales en `A2:A`, correos en `B2:B`
 - **TotalMeses2025**: contiene la matriz de datos reales por mes y sucursal
 
 ---
@@ -41,4 +42,3 @@ Este proyecto automatiza la creación, mantenimiento y visualización de dashboa
 ## 📄 Créditos
 
 Este repositorio fue desarrollado por [@piztian](https://github.com/piztian) para automatizar dashboards mensuales de rendimiento por tienda, con asistencia de [ChatGPT](https://chat.openai.com/).
-
