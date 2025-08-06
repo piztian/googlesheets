@@ -31,8 +31,10 @@ function importarDesdeGoogleSheets() {
         sheetNameDestino = "Lista General BM";
       } else if (fileName.includes("proecom")) {
         sheetNameDestino = "Lista General Ecom";
+      } else if (fileName.includes("todos")) {
+        sheetNameDestino = "Todo";
       } else {
-        continue; // ⏭️ Si no contiene BM o PROECOM, se salta este archivo
+        continue; // ⏭️ Si no contiene BM, PROECOM o TODOS, se salta este archivo
       }
 
       // 📄 9. Acceder a la hoja destino en el archivo central
@@ -50,10 +52,9 @@ function importarDesdeGoogleSheets() {
       var sheetOrigen = ssOrigen.getSheets()[0];
 
       // 📥 12. Definir cuántas columnas leer según tipo de archivo
-      var numCols = fileName.includes("proecom") ? 12 : 9;
+      var numCols = fileName.includes("proecom") || fileName.includes("todos") ? 12 : 9;
       var numRows = sheetOrigen.getLastRow();
       var data = sheetOrigen.getRange(1, 1, numRows, numCols).getValues();
-
 
       // 🧹 13. Limpiar contenido actual de la hoja destino (sin borrar formato)
       sheetDestino.clearContents();
@@ -78,7 +79,7 @@ function importarDesdeGoogleSheets() {
 
     // 📭 19. Si no se procesó ningún archivo, notificar al usuario
     if (procesados === 0) {
-      ui.alert("No se encontró ningún archivo que contenga 'BM' o 'PROECOM' en el nombre.");
+      ui.alert("No se encontró ningún archivo que contenga 'BM', 'PROECOM' o 'TODOS' en el nombre.");
     }
 
   } catch (error) {
