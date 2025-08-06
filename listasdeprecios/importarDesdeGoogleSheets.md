@@ -1,84 +1,77 @@
-ChatGPT said:
-Perfecto, vamos a agregar todos esos pasos al manual, con los detalles que mencionas para la descarga, descompresión y carga en Google Sheets, tanto de los archivos DATOS XLS del canal de Telegram, como de los archivos de LAFT y PROECOM desde el ERP.
+# **Manual para Importación de Archivos de Excel y Google Sheets**
 
-Aquí tienes el manual completo en formato .md:
+Este manual explica los pasos para **descargar**, **descomprimir** y **subir los archivos de Excel** desde dos fuentes:  
+1. El canal de **Telegram "Listas en Excel Vendedores Existencias"**  
+2. El **ERP Celucenter** para el archivo **INVENTARIO ACTUAL - DATOS - PROECOM**
 
-Manual para Importación de Archivos de Excel y Google Sheets
-Este manual explica los pasos para descargar, descomprimir y subir los archivos de Excel desde dos fuentes:
+Una vez subidos, los archivos se convertirán en **Google Sheets** y luego se procesarán automáticamente a través del **script de importación**.
 
-El canal de Telegram "Listas en Excel Vendedores Existencias"
+---
 
-El ERP Celucenter para el archivo INVENTARIO ACTUAL - DATOS - PROECOM
+## **Requisitos**
 
-Una vez subidos, los archivos se convertirán en Google Sheets y luego se procesarán automáticamente a través del script de importación.
+1. Acceso al canal de Telegram **Listas en Excel Vendedores Existencias** para descargar los archivos.
+2. Acceso al ERP Celucenter para generar el archivo **INVENTARIO ACTUAL - DATOS - PROECOM**.
+3. Cuenta de Google Drive para subir los archivos descomprimidos.
+4. Habilitar el script en Google Apps Script para importar y organizar los datos.
 
-Requisitos
-Acceso al canal de Telegram Listas en Excel Vendedores Existencias para descargar los archivos.
+---
 
-Acceso al ERP Celucenter para generar el archivo INVENTARIO ACTUAL - DATOS - PROECOM.
+## **Pasos para Obtener los Archivos desde Telegram**
 
-Cuenta de Google Drive para subir los archivos descomprimidos.
+1. **Accede al Canal de Telegram**:  
+   [Listas en Excel Vendedores Existencias](https://web.telegram.org/a/#-1001619365335)
 
-Habilitar el script en Google Apps Script para importar y organizar los datos.
+2. **Busca el archivo más reciente**:  
+   El archivo que contiene todos los datos se llama **`DATOS XLSYYYYMMDD.xls.zip`**.
 
-Pasos para Obtener los Archivos desde Telegram
-Accede al Canal de Telegram:
-Listas en Excel Vendedores Existencias
+3. **Descargar y Descomprimir**:  
+   - **Descarga** el archivo comprimido `DATOS XLSYYYYMMDD.xls.zip`.
+   - **Descomprime** el archivo en tu computadora.
 
-Busca el archivo más reciente:
-El archivo que contiene todos los datos se llama DATOS XLSYYYYMMDD.xls.zip.
+4. **Subir a Google Drive**:
+   - Una vez descomprimido, **sube el archivo Excel** a tu cuenta de **Google Drive**.
+   - **Cambia el nombre del archivo** a algo como `DATOS XLSYYYYMMDD` para facilitar la identificación.
 
-Descargar y Descomprimir:
+5. **Convertir a Google Sheets**:
+   - Abre el archivo de Excel en Google Drive.
+   - Ve a **Archivo > Guardar como Google Sheets** para convertirlo.
 
-Descarga el archivo comprimido DATOS XLSYYYYMMDD.xls.zip.
+---
 
-Descomprime el archivo en tu computadora.
+## **Pasos para Obtener el Archivo de LAFT desde el ERP**
 
-Subir a Google Drive:
+1. **Accede al ERP Celucenter**:  
+   Dirígete a [http://erp.celucenter.com/](http://erp.celucenter.com/).
 
-Una vez descomprimido, sube el archivo Excel a tu cuenta de Google Drive.
+2. **Generar el Reporte**:
+   - Ve a **Reportes > Inventario > Actual**.
+   - Genera el archivo **INVENTARIO ACTUAL - DATOS - PROECOM** en formato **XLS**.
 
-Cambia el nombre del archivo a algo como DATOS XLSYYYYMMDD para facilitar la identificación.
+3. **Subir a Google Drive**:
+   - **Sube** el archivo **XLS** generado a tu Google Drive.
+   - **Abre el archivo** y luego ve a **Archivo > Guardar como Google Sheets** para convertirlo.
 
-Convertir a Google Sheets:
+4. **Renombrar el Archivo**:  
+   Renombra la hoja a **`Lista General LAFT`** o el nombre que prefieras.
 
-Abre el archivo de Excel en Google Drive.
+---
 
-Ve a Archivo > Guardar como Google Sheets para convertirlo.
+## **Proceso de Ejecución del Script**
 
-Pasos para Obtener el Archivo de LAFT desde el ERP
-Accede al ERP Celucenter:
-Dirígete a http://erp.celucenter.com/.
+Una vez que los archivos estén convertidos en Google Sheets y subidos a Google Drive, puedes proceder con el **script de importación**. Este script realizará lo siguiente:
 
-Generar el Reporte:
+- Importará los datos de las hojas **`BM`**, **`PROECOM`** y **`TODO`**.
+- Procesará los archivos de acuerdo al nombre del archivo: si contiene **"bm"**, **"proecom"**, o **"todos"**, se asignarán a las hojas correspondientes del archivo principal.
 
-Ve a Reportes > Inventario > Actual.
+---
 
-Genera el archivo INVENTARIO ACTUAL - DATOS - PROECOM en formato XLS.
+### **Ejecutar el Script de Importación**
 
-Subir a Google Drive:
+1. **Abre Google Sheets** donde has subido los archivos y habilita el editor de **Apps Script**.
+2. Pega el siguiente código en el editor de Apps Script:
 
-Sube el archivo XLS generado a tu Google Drive.
-
-Abre el archivo y luego ve a Archivo > Guardar como Google Sheets para convertirlo.
-
-Renombrar el Archivo:
-Renombra la hoja a Lista General LAFT o el nombre que prefieras.
-
-Proceso de Ejecución del Script
-Una vez que los archivos estén convertidos en Google Sheets y subidos a Google Drive, puedes proceder con el script de importación. Este script realizará lo siguiente:
-
-Importará los datos de las hojas BM, PROECOM y TODO.
-
-Procesará los archivos de acuerdo al nombre del archivo: si contiene "bm", "proecom", o "todos", se asignarán a las hojas correspondientes del archivo principal.
-
-Ejecutar el Script de Importación
-Abre Google Sheets donde has subido los archivos y habilita el editor de Apps Script.
-
-Pega el siguiente código en el editor de Apps Script:
-
-javascript
-Copy
+```javascript
 function importarDesdeGoogleSheets() {
   var folderId = "ID_DE_TU_CARPETA";  // Reemplaza con el ID de tu carpeta
   var spreadsheetId = "ID_DE_TU_HOJA_DE_DESTINO";  // Reemplaza con el ID de tu archivo central
@@ -151,6 +144,8 @@ function importarDesdeGoogleSheets() {
     ui.alert("❌ Error: " + error.message);
   }
 }
+
+
 Ejecuta el Script:
 
 Puedes ejecutarlo manualmente desde el editor de Apps Script o configurar un desencadenador automático para que lo haga a intervalos regulares.
